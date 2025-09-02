@@ -1,7 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://v6ieas1brhk6"]
+[gd_scene load_steps=11 format=3 uid="uid://v6ieas1brhk6"]
 
+[ext_resource type="Script" uid="uid://b440vvmfqilws" path="res://main.gd" id="1_fos0i"]
 [ext_resource type="Texture2D" uid="uid://caoh88wnccrjq" path="res://proxy-image.png" id="1_glv2v"]
+[ext_resource type="Script" uid="uid://c27yrrc3b5d2b" path="res://ball.gd" id="2_cm0pq"]
 [ext_resource type="Texture2D" uid="uid://netjwjxp400k" path="res://ball.png" id="2_uu6xs"]
+[ext_resource type="Script" uid="uid://bcn82k51e5tpl" path="res://player.gd" id="3_r0du0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3dxm6"]
+size = Vector2(287.644, 312.069)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_glv2v"]
 radius = 34.0
@@ -15,7 +21,17 @@ colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_cm0pq"]
 gradient = SubResource("Gradient_r0du0")
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("ball")]
+script = ExtResource("1_fos0i")
+ball = NodePath("Ball")
+
+[node name="GoalArea" type="Area2D" parent="."]
+position = Vector2(0, 598.56)
+scale = Vector2(1.74, 1.74)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GoalArea"]
+position = Vector2(0.14368, -147.736)
+shape = SubResource("RectangleShape2D_3dxm6")
 
 [node name="Octagon" type="Node2D" parent="."]
 scale = Vector2(1.74, 1.74)
@@ -30,7 +46,8 @@ texture = ExtResource("1_glv2v")
 polygon = PackedVector2Array(347, -144, 144.253, -347.701, -143, -347, -347.701, -143.678, -348, 144, -144.253, 347.701, 144, 348, 348, 143, 362, 150, 151, 362, -150, 362.069, -363, 150, -362, -152, -151, -362, 150, -362.069, 362.069, -150, 362, 150, 348, 143)
 
 [node name="Ball" type="RigidBody2D" parent="."]
-gravity_scale = 0.5
+gravity_scale = 0.0
+script = ExtResource("2_cm0pq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
 shape = SubResource("CircleShape2D_glv2v")
@@ -41,9 +58,9 @@ texture = ExtResource("2_uu6xs")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="Player" type="RigidBody2D" parent="."]
+[node name="Player" type="CharacterBody2D" parent="."]
 position = Vector2(0, 567)
-gravity_scale = 0.0
+script = ExtResource("3_r0du0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("RectangleShape2D_uu6xs")
@@ -51,3 +68,5 @@ shape = SubResource("RectangleShape2D_uu6xs")
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 scale = Vector2(1.65625, 0.4375)
 texture = SubResource("GradientTexture2D_cm0pq")
+
+[connection signal="body_entered" from="GoalArea" to="." method="_on_area_2d_body_entered"]
